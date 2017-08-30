@@ -10,7 +10,8 @@ class Repo(db.Model):
     commits = db.relationship('Commit', backref='repo', lazy='dynamic')
 
     def get_repo(self):
-        dict = {"last_update": self.last_update,
+        dict = {"id": self.id,
+                "last_update": self.last_update.strftime('%Y-%m-%d %H:%M:%S'),
                 "domain": self.domain,
                 "group": self.group,
                 "project": self.project

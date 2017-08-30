@@ -14,11 +14,17 @@ db.create_all()
 dt=datetime.now()
 test_data = models.Repo(last_update=dt.strftime('%Y%m%d%H%M%S'),
                         domain="www.github.com",
+                        group="zhuke2",
+                        project="modoojunko"
+                        )
+test_data2 = models.Repo(last_update=dt.strftime('%Y%m%d%H%M%S'),
+                        domain="www.github.com",
                         group="modeoojunko",
                         project="modoojunko"
                         )
 
 db.session.add(test_data)
+db.session.add(test_data2)
 db.session.commit()
 
 ## query data
@@ -82,13 +88,13 @@ else:
 
 ## delete data
 ## delete commit
-delete_repo_data = models.Repo.query.filter_by(project="zhuke").first()
-delete_commit_data = models.Commit.query.filter_by(revision="jalidjaosikbkhgykjb").first()
-delete_commit_diff = models.CommitDiff.query.filter_by(commit_id=1).first()
-db.session.delete(delete_repo_data)
-db.session.delete(delete_commit_data)
-db.session.delete(delete_commit_diff)
-db.session.commit()
+#delete_repo_data = models.Repo.query.filter_by(project="zhuke").first()
+#delete_commit_data = models.Commit.query.filter_by(revision="jalidjaosikbkhgykjb").first()
+#delete_commit_diff = models.CommitDiff.query.filter_by(commit_id=1).first()
+#db.session.delete(delete_repo_data)
+#db.session.delete(delete_commit_data)
+#db.session.delete(delete_commit_diff)
+#db.session.commit()
 
 ## drop all data
 
