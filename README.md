@@ -14,11 +14,11 @@ this app via flask-sqlalchemy.
 ### create user
 
 ```shell
-CREATE USER 'cloc_user'@'%' IDENTIFIED BY 'cloc=123';
+CREATE USER 'gitlog_user'@'%' IDENTIFIED BY 'gitlog=123';
 ```
 
 ### create database
 
 ```shell
-CREATE SCHEMA `cloc` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci
+CREATE SCHEMA `gitlog` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci
 ```
