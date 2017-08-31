@@ -1,6 +1,5 @@
 from app import app, models, jsonify, request
 from flask import render_template
-import json
 
 
 @app.route('/')
@@ -30,8 +29,48 @@ def get_repo():
         return jsonify(result)
 
 
-@app.route('/repo/<int:repo_id>')
+@app.route('/repo/<int:repo_id>', methods=["GET"])
 def get_repo_via_id(repo_id):
     data = models.Repo.query.filter_by(id=repo_id).first()
-    result = {"status": "success","message": "", "data": data.get_repo()}
+    result = {"status": "success", "message": "", "data": data.get_repo()}
+    return jsonify(result)
+
+
+@app.route('/repo/<int:repo_id>/commit', methods=['POST'])
+def post_commit(repo_id):
+    if request.get_json():
+        body = request.data
+        if "repo_id" in body:
+            if "revision" in body:
+                if "last_update" in body:
+                    if "author" in body:
+                        if "author_email" in body:
+                            if "commit_date" in body:
+                                if "committer" in body:
+                                    if "committer_email" in body:
+                                        if "title" in body:
+                                            if "message" in body:
+                                                result = {"status": "success","message": "", "data": body}
+                                            else:
+                                                result = {"status": "failed","message": "message is missed", "data": ""}
+                                        else:
+                                            result = {"status": "failed","message": "title is missed", "data": ""}
+                                    else:
+                                        result = {"status": "failed","message": "committer_email is missed", "data": ""}
+                                else:
+                                    result = {"status": "failed","message": "committer is missed", "data": ""}
+                            else:
+                                result = {"status": "failed","message": "commit_date is missed", "data": ""}
+                        else:
+                            result = {"status": "failed","message": "author_email is missed", "data": ""}
+                    else:
+                        result = {"status": "failed","message": "author is missed", "data": ""}
+                else:
+                    result = {"status": "failed","message": "last_update is missed", "data": ""}
+            else:
+                result = {"status": "failed","message": "revision is missed", "data": ""}
+        else:
+            result = {"status": "failed","message": "repo_id is missed", "data": ""}
+    else:
+        result = {"status": "failed", "message": "body is missed", "data": ""}
     return jsonify(result)
