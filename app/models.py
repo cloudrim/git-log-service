@@ -7,7 +7,7 @@ class Repo(db.Model):
     domain = db.Column(db.String(80))
     group = db.Column(db.String(80))
     project = db.Column(db.String(80))
-    commits = db.relationship('Commit', backref='repo', lazy='dynamic')
+    commits = db.relationship('Commit', backref='commit', lazy='dynamic')
 
     def get_repo(self):
         dict = {"id": self.id,
@@ -31,7 +31,7 @@ class Commit(db.Model):
     committer_email = db.Column(db.String(25))
     title = db.Column(db.String(80))
     message = db.Column(db.String(1024))
-    commitdiffs = db.relationship('CommitDiff', backref='commit', lazy='dynamic')
+    commitdiffs = db.relationship('CommitDiff', backref='commitdiff', lazy='dynamic')
 
     def get_commit(self):
         dict = {
