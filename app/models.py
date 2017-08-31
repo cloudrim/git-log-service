@@ -22,7 +22,7 @@ class Repo(db.Model):
 class Commit(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     repo_id = db.Column(db.Integer, db.ForeignKey('repo.id'))
-    revision = db.Column(db.String(255))
+    revision = db.Column(db.String(255), unique=True)
     last_update = db.Column(db.DateTime)
     author = db.Column(db.String(45))
     author_email = db.Column(db.String(45))
@@ -38,7 +38,7 @@ class Commit(db.Model):
             "id": self.id,
             "repo_id": self.repo_id,
             "revision": self.revision,
-            "last_update": self.last_update,
+            "last_update": self.last_update.strftime('%Y-%m-%d %H:%M:%S'),
             "author": self.author,
             "author_email": self.author_email,
             "committer": self.committer,
@@ -61,7 +61,7 @@ class CommitDiff(db.Model):
         dict = {
             "id": self.id,
             "commit_id": self.commit_id,
-            "last_update": self.last_update,
+            "last_update": self.last_update.strftime('%Y-%m-%d %H:%M:%S'),
             "change_file": self.change_file,
             "add_lines": self.add_lines,
             "del_lines": self.del_lines
