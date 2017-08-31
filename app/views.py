@@ -79,7 +79,7 @@ def query_one_commit_id(repo_id, commit_id):
     if query_repo:
         query_commit = models.Commit.query.filter_by(id=commit_id, repo_id=repo_id).first()
         if query_commit:
-            result = query_commit.get_commit()
+            result = {"status": "200", "message": "", "data": query_commit.get_commit()}
         else:
             result = {"status": "201", "message": "empty data for commit_id: " + str(commit_id), "data": ""}
     else:
@@ -88,6 +88,29 @@ def query_one_commit_id(repo_id, commit_id):
 
 
 # commit diff api
+@app.route('/repo/<int:repo_id>/commit/<int:commit_id>/commit_diff', methods=["POST"])
+def insert_commit_diff(repo_id, commit_id):
+    query_repo = models.Repo.query.filter_by(id=repo_id).first()
+    body = request.get_json(force=True)
+    if query_repo:
+        query_commit = models.Commit.query.filter_by(id=commit_id, repo_id=repo_id).first()
+        if query_commit:
+            query_commit_diff = models.CommitDiff.query.filter_by(**body).first()
+            if not query_commit_diff:
+                insert_commit_diff = models.CommitDiff(**body)
+                db.session.add(insert_commit_diff)
+                db.session.commit()
+                data = models.CommitDiff.query.filter_by(**body).first().get_commit_diff()
+                result = {"status": "200", "message": "", "data": data}
+            else:
+                result = {"status": "202", "message": "commit_diff table already has this", "data": ""}
+        else:
+            result = {"status": "201", "message": "empty data for commit : " + str(commit_id), "data": ""}
+    else:
+        result = {"status": "201", "message": "empty data for repo_id: " + str(repo_id), "data": ""}
+    return jsonify(result)
+
+
 @app.route('/repo/<int:repo_id>/commit/<int:commit_id>/commit_diff', methods=["GET"])
 def query_commit_diff(repo_id, commit_id):
     return "ok"
