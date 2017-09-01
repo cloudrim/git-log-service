@@ -7,6 +7,7 @@ class Repo(db.Model):
     domain = db.Column(db.String(80))
     group = db.Column(db.String(80))
     project = db.Column(db.String(80))
+    status = db.Column(db.String(25))  # running/scheduling/success/failed/error
     commits = db.relationship('Commit', backref='commit', lazy='dynamic')
 
     def get_repo(self):
