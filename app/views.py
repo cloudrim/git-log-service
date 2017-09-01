@@ -3,10 +3,14 @@ from flask import render_template
 
 
 @app.route('/')
-@app.route('/index')
-def index():
-    user = {'nickname': 'Miguel'} # fake user
-    return render_template("index.html", title='Home', user=user)
+@app.route('/status')
+def repo_status():
+    data_list = models.Repo.query.all()
+    list_status = []
+    for data in data_list:
+        list_status.append(data.get_status())
+    result = {"status": "200", "message": "", "data": list_status}
+    return jsonify(result)
 
 
 # repo api
