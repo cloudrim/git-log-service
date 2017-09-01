@@ -97,8 +97,8 @@ def insert_commit_diff(repo_id, commit_id):
         if query_commit:
             query_commit_diff = models.CommitDiff.query.filter_by(**body).first()
             if not query_commit_diff:
-                insert_commit_diff = models.CommitDiff(**body)
-                db.session.add(insert_commit_diff)
+                insert_commit_diff_data = models.CommitDiff(**body)
+                db.session.add(insert_commit_diff_data)
                 db.session.commit()
                 data = models.CommitDiff.query.filter_by(**body).first().get_commit_diff()
                 result = {"status": "200", "message": "", "data": data}
@@ -113,4 +113,22 @@ def insert_commit_diff(repo_id, commit_id):
 
 @app.route('/repo/<int:repo_id>/commit/<int:commit_id>/commit_diff', methods=["GET"])
 def query_commit_diff(repo_id, commit_id):
-    return "ok"
+    query_repo = models.Repo.query.filter_by(id=repo_id).first()
+    if query_repo:
+        query_commit = models.Commit.query.filter_by(id=commit_id, repo_id=repo_id).first()
+        if query_commit:
+            query_commit_diff_data = models.CommitDiff.query.filter_by(commit_id=commit_id)
+            if query_commit_diff_data.first():
+                data = []
+                for commit_diff in query_commit_diff_data:
+                    data.append(commit_diff.get_commit_diff())
+                result = {"status": "200", "message": "", "data": data}
+            else:
+                result = {"status": "201", "message": "empty commit diff data for commit : " + str(commit_id),
+                          "data": ""}
+        else:
+            result = {"status": "201", "message": "empty commit data for commit : " + str(commit_id), "data": ""}
+    else:
+        result = {"status": "201", "message": "empty repo data for repo_id: " + str(repo_id), "data": ""}
+
+    return jsonify(result)
