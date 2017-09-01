@@ -2,17 +2,6 @@ from app import app, models, jsonify, request, db
 from flask import render_template
 
 
-@app.route('/')
-@app.route('/status')
-def repo_status():
-    data_list = models.Repo.query.all()
-    list_status = []
-    for data in data_list:
-        list_status.append(data.get_status())
-    result = {"status": "200", "message": "", "data": list_status}
-    return jsonify(result)
-
-
 # repo api
 @app.route('/repo', methods=['POST'])
 def insert_repo():
@@ -36,6 +25,7 @@ def insert_repo():
     return jsonify(result)
 
 
+@app.route('/')
 @app.route('/repo', methods=["GET"])
 def get_repo():
     repo_list = []
@@ -48,7 +38,7 @@ def get_repo():
         if data:
             result = {"status": "200", "message": "", "data": data.get_repo()}
         else:
-            result = {"status": "201", "message": "empty data", "data": ""}
+            result = {"status": "201", "message": "no data for these params: " + str(request.args.items()), "data": ""}
         return jsonify(result)
 
     else:
@@ -57,6 +47,29 @@ def get_repo():
             repo_list.append(repo.get_repo())
         result = {"status": "200", "message": "", "data": repo_list}
         return jsonify(result)
+
+
+@app.route('/repo/<int:repo_id>', methods=["PUT"])
+def update_repo(repo_id):
+    pre_update_repo = models.Repo.query.filter_by(id=repo_id).first()
+    body = request.get_json(force=True)
+    if pre_update_repo:
+        if "status" in body:
+            pre_update_repo.status = body["status"]
+        if "domain" in body:
+            pre_update_repo.domain = body["domain"]
+        if "group" in body:
+            pre_update_repo.group = body["group"]
+        if "project" in body:
+            pre_update_repo.project = body["project"]
+        if "last_update" in body:
+            pre_update_repo.last_update = body["last_update"]
+        db.session.commit()
+        data = models.Repo.query.filter_by(id=repo_id).first()
+        result = {"status": "200", "message": "", "data": data.get_repo()}
+    else:
+        result = {"status": "201", "message": "no data for the repo id: " + repo_id, "data": ""}
+    return jsonify(result)
 
 
 @app.route('/repo/<int:repo_id>', methods=["GET"])
