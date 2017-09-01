@@ -10,6 +10,28 @@ def index():
 
 
 # repo api
+@app.route('/repo', methods=['POST'])
+def insert_repo():
+    body = request.get_json(force=True)
+    body["status"] = "scheduling"  # send data to rabbitmq in queue
+    query_repo_exists = models.Repo.query.filter_by(group=body["group"],
+                                                    domain=body["domain"],
+                                                    project=body["project"]
+                                                    )
+    if query_repo_exists:
+        result = {"status": "202", "message": "this repo already exist", "data": body}
+    else:
+        insert_repo_data = models.Repo(**body)
+        db.session.add(insert_repo_data)
+        db.session.commit()
+        data = models.Repo.query.filter_by(**body).first()
+        if data:
+            result = {"status": "200", "message": "", "data": data.get_repo()}
+        else:
+            result = {"status": "401", "message": "insert data to repo table error", "data": ""}
+    return jsonify(result)
+
+
 @app.route('/repo', methods=["GET"])
 def get_repo():
     repo_list = []
