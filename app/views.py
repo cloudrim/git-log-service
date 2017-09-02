@@ -6,11 +6,11 @@ from flask import render_template
 @app.route('/repo', methods=['POST'])
 def insert_repo():
     body = request.get_json(force=True)
-    body["status"] = "scheduling"  # send data to rabbitmq in queue
+    body["status"] = "scheduled"  # send data to rabbitmq in queue
     query_repo_exists = models.Repo.query.filter_by(group=body["group"],
                                                     domain=body["domain"],
                                                     project=body["project"]
-                                                    )
+                                                    ).first()
     if query_repo_exists:
         result = {"status": "202", "message": "this repo already exist", "data": body}
     else:

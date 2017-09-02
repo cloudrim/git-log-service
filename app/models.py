@@ -9,6 +9,7 @@ class Repo(db.Model):
     project = db.Column(db.String(80))
     status = db.Column(db.String(25))  # running/scheduling/success/failed/error
     commits = db.relationship('Commit', backref='commit', lazy='dynamic')
+    path = db.Column(db.String(255))  # record the sub-folder
 
     def get_repo(self):
         dict = {"id": self.id,
@@ -16,7 +17,8 @@ class Repo(db.Model):
                 "domain": self.domain,
                 "group": self.group,
                 "project": self.project,
-                "status": self.status
+                "status": self.status,
+                "path": self.path
                 }
         return dict
 
@@ -26,6 +28,7 @@ class Repo(db.Model):
             "group": self.group,
             "project": self.project,
             "status": self.status,
+            "path": self.path,
             "late_update": self.last_update.strftime('%Y-%m-%d %H:%M:%S')
         }
         return dict
@@ -38,7 +41,8 @@ class Commit(db.Model):
     last_update = db.Column(db.DateTime)
     author = db.Column(db.String(45))
     author_email = db.Column(db.String(45))
-    commit_date = db.Column(db.DateTime)
+    author_date = db.Column(db.DateTime)
+    committer_date = db.Column(db.DateTime)
     committer = db.Column(db.String(45))
     committer_email = db.Column(db.String(25))
     title = db.Column(db.String(80))
