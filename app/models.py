@@ -16,20 +16,8 @@ class Repo(db.Model):
                 "domain": self.domain,
                 "group": self.group,
                 "project": self.project,
-                "status": self.status,
                 "path": self.path
                 }
-        return dict
-
-    def get_status(self):
-        dict = {
-            "domain": self.domain,
-            "group": self.group,
-            "project": self.project,
-            "status": self.status,
-            "path": self.path,
-            "late_update": self.last_update.strftime('%Y-%m-%d %H:%M:%S')
-        }
         return dict
 
 
