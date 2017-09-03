@@ -167,14 +167,25 @@ def query_commit_diff(repo_id, commit_id):
     if query_repo:
         query_commit = models.Commit.query.filter_by(id=commit_id, repo_id=repo_id).first()
         if query_commit:
-            query_commit_diff_data = models.CommitDiff.query.filter_by(commit_id=commit_id)
-            if query_commit_diff_data.first():
-                data = []
-                for commit_diff in query_commit_diff_data:
-                    data.append(commit_diff.get_commit_diff())
-                result = {"status": "200", "message": "", "data": data}
+            if request.args:  # handle ?abc=hello&xyz=world&ab=hellohello query
+                params = {}
+                for item in request.args.items():
+                    params[item[0]] = item[1]
+                data = models.CommitDiff.query.filter_by(**params).first()  # use ** to support dict to key=value
+                if data:
+                    result = {"status": "200", "message": "", "data": data.get_commit_diff()}
+                else:
+                    result = {"status": "201", "message": "no data for these params: " + str(request.args.items()),
+                              "data": ""}
             else:
-                result = {"status": "201", "message": "empty commit diff data for commit : " + str(commit_id),
+                query_commit_diff_data = models.CommitDiff.query.filter_by(commit_id=commit_id)
+                if query_commit_diff_data.first():
+                    data = []
+                    for commit_diff in query_commit_diff_data:
+                        data.append(commit_diff.get_commit_diff())
+                    result = {"status": "200", "message": "", "data": data}
+                else:
+                    result = {"status": "201", "message": "empty commit diff data for commit : " + str(commit_id),
                           "data": ""}
         else:
             result = {"status": "201", "message": "empty commit data for commit : " + str(commit_id), "data": ""}
