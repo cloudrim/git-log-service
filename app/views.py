@@ -5,8 +5,7 @@ from flask import render_template
 # repo api
 @app.route('/repo', methods=['POST'])
 def insert_repo():
-    body = request.get_json(force=True)
-    body["status"] = "scheduled"  # send data to rabbitmq in queue
+    body = request.get_json(force=True)  # send data to rabbitmq in queue
     query_repo_exists = models.Repo.query.filter_by(group=body["group"],
                                                     domain=body["domain"],
                                                     project=body["project"]
@@ -54,8 +53,6 @@ def update_repo(repo_id):
     pre_update_repo = models.Repo.query.filter_by(id=repo_id).first()
     body = request.get_json(force=True)
     if pre_update_repo:
-        if "status" in body:
-            pre_update_repo.status = body["status"]
         if "domain" in body:
             pre_update_repo.domain = body["domain"]
         if "group" in body:

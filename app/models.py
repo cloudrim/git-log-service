@@ -7,7 +7,6 @@ class Repo(db.Model):
     domain = db.Column(db.String(80))
     group = db.Column(db.String(80))
     project = db.Column(db.String(80))
-    status = db.Column(db.String(25))  # running/scheduling/success/failed/error
     commits = db.relationship('Commit', backref='commit', lazy='dynamic')
     path = db.Column(db.String(255))  # record the sub-folder
 
@@ -39,13 +38,12 @@ class Commit(db.Model):
     repo_id = db.Column(db.Integer, db.ForeignKey('repo.id'))
     revision = db.Column(db.String(255), unique=True)
     last_update = db.Column(db.DateTime)
-    author = db.Column(db.String(45))
-    author_email = db.Column(db.String(45))
+    author = db.Column(db.String(255))
+    author_email = db.Column(db.String(255))
     author_date = db.Column(db.DateTime)
     committer_date = db.Column(db.DateTime)
-    committer = db.Column(db.String(45))
-    committer_email = db.Column(db.String(25))
-    title = db.Column(db.String(80))
+    committer = db.Column(db.String(255))
+    committer_email = db.Column(db.String(255))
     message = db.Column(db.String(1024))
     commitdiffs = db.relationship('CommitDiff', backref='commitdiff', lazy='dynamic')
 
@@ -61,7 +59,6 @@ class Commit(db.Model):
             "committer": self.committer,
             "committer_email": self.committer_email,
             "committer_date": self.committer_date.strftime('%Y-%m-%d %H:%M:%S'),
-            "title": self.title,
             "message": self.message
         }
         return dict

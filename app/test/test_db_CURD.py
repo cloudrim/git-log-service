@@ -55,7 +55,6 @@ else:
                                 committer_date=dt.strftime('%Y%m%d%H%M%S'),
                                 committer="modoo",
                                 committer_email="modoo@11.com",
-                                title="hello",
                                 message="world"
                                 )
     db.session.add(commit_data)

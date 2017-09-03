@@ -20,5 +20,5 @@ CREATE USER 'gitlog_user'@'%' IDENTIFIED BY 'gitlog=123';
 ### create database
 
 ```shell
-CREATE SCHEMA `gitlog` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci
+CREATE SCHEMA `gitlog` DEFAULT CHARACTER SET utf8mb4 ;
 ```
