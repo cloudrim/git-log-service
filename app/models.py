@@ -57,8 +57,10 @@ class Commit(db.Model):
             "last_update": self.last_update.strftime('%Y-%m-%d %H:%M:%S'),
             "author": self.author,
             "author_email": self.author_email,
+            "author_date": self.author_date.strftime('%Y-%m-%d %H:%M:%S'),
             "committer": self.committer,
             "committer_email": self.committer_email,
+            "committer_date": self.committer_date.strftime('%Y-%m-%d %H:%M:%S'),
             "title": self.title,
             "message": self.message
         }

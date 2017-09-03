@@ -101,14 +101,25 @@ def post_commit(repo_id):
 
 @app.route('/repo/<int:repo_id>/commit', methods=["GET"])
 def query_commit_id(repo_id):
-    commit_id_list = models.Commit.query.filter_by(repo_id=repo_id)
-    if commit_id_list:
-        data = []
-        for commit_id in commit_id_list:
-            data.append(commit_id.get_commit())
-        result = {"status": "200", "message": "", "data": data}
+    if request.args:  # handle ?abc=hello&xyz=world&ab=hellohello query
+        params = {}
+        for item in request.args.items():
+            params[item[0]] = item[1]
+        data = models.Commit.query.filter_by(**params).first()  # use ** to support dict to key=value
+        if data:
+            result = {"status": "200", "message": "", "data": data.get_commit()}
+        else:
+            result = {"status": "201", "message": "no data for these params: " + str(request.args.items()), "data": ""}
+        return jsonify(result)
     else:
-        result = {"status": "201", "message": "empty data", "data": ""}
+        commit_id_list = models.Commit.query.filter_by(repo_id=repo_id)
+        if commit_id_list:
+            data = []
+            for commit_id in commit_id_list:
+                data.append(commit_id.get_commit())
+            result = {"status": "200", "message": "", "data": data}
+        else:
+            result = {"status": "201", "message": "empty data", "data": ""}
     return jsonify(result)
 
 
