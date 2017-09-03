@@ -22,3 +22,22 @@ CREATE USER 'gitlog_user'@'%' IDENTIFIED BY 'gitlog=123';
 ```shell
 CREATE SCHEMA `gitlog` DEFAULT CHARACTER SET utf8mb4 ;
 ```
+
+### init 
+
+```shell
+python test/test_db_CURD.py
+```
+
+## run
+
+```shell
+python run.py
+```
+
+## build 
+
+TBD
+
+
+
