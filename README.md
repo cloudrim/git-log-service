@@ -1,4 +1,4 @@
-# cloc-service
+# gitlog-service
 
 it is a api service(producer) to get "GET/POST/DELETE/PUT" method from front end.
 
