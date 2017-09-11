@@ -8,7 +8,7 @@ it sends them to rabbitmq and there has many "workers" to solve them to data and
 
 ### create db
 
-before you run the app, you should add one database in your mysql named "cloc_db" uses utf-8 format. then other things will be handled by
+before you run the app, you should add one database in your mysql named "gitlog" uses utf-8 format. then other things will be handled by
 this app via flask-sqlalchemy.
 
 ### create user
