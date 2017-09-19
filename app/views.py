@@ -31,13 +31,13 @@ def get_repo():
     if request.args: #handle ?abc=hello&xyz=world&ab=hellohello query
         print("read params")
         params = {}
+        data_list = []
         for item in request.args.items():
             params[item[0]] = item[1]
-        datas = models.Repo.query.filter_by(**params)  # use ** to support dict to key=value
-        data_list = []
-        for data in datas:
-            data_list.append(data)
-        if data:
+        if models.Repo.query.filter_by(**params).first():
+            datas = models.Repo.query.filter_by(**params)  # use ** to support dict to key=value
+            for data in datas:
+                data_list.append(data.get_repo())
             result = {"status": "200", "message": "", "data": data_list}
         else:
             result = {"status": "201", "message": "no data for these params: " + str(request.args.items()), "data": ""}
