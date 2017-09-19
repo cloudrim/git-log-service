@@ -33,9 +33,12 @@ def get_repo():
         params = {}
         for item in request.args.items():
             params[item[0]] = item[1]
-        data = models.Repo.query.filter_by(**params).first() #use ** to support dict to key=value
+        datas = models.Repo.query.filter_by(**params)  # use ** to support dict to key=value
+        data_list = []
+        for data in datas:
+            data_list.append(data)
         if data:
-            result = {"status": "200", "message": "", "data": data.get_repo()}
+            result = {"status": "200", "message": "", "data": data_list}
         else:
             result = {"status": "201", "message": "no data for these params: " + str(request.args.items()), "data": ""}
         return jsonify(result)
